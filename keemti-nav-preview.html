@@ -191,6 +191,10 @@
 
   /* ===== Mobile header (hidden on desktop) ===== */
   .m-header { display: none; }
+  .m-drawer, .m-drawer-overlay { display: none; }
+  .device-stage.mobile .m-header { display: block; }
+  .device-stage.mobile .m-drawer, .device-stage.mobile .m-drawer-overlay { display: block; }
+  .device-stage.mobile #mega { display: none !important; }
   .m-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; background: #fff; border-bottom: 1px solid #ececec; position: relative; z-index: 30; }
   .m-bar.greened { background: var(--olive); }
   .m-left, .m-right { display: flex; align-items: center; gap: 18px; }
@@ -704,14 +708,16 @@ function switchDevice(d){
   const stage = document.getElementById('deviceStage');
   stage.classList.toggle('mobile', d==='mobile');
   document.querySelectorAll('.dvbtn').forEach(b=>b.classList.toggle('active', b.dataset.dev===d));
-  const mh = document.getElementById('mHeader');
   const dh = document.getElementById('headerLayout');
-  const mega = document.getElementById('mega');
   if(d==='mobile'){
-    mh.style.display='block'; dh.style.display='none'; mega.style.display='none';
+    closeMega();          // close any open desktop megamenu cleanly (clears greened state)
+    dh.style.display='none';
   } else {
-    mh.style.display='none'; dh.style.display=''; closeDrawer();
+    dh.style.display='';
+    closeDrawer();
   }
+  // Note: .m-header / .m-drawer / .m-drawer-overlay visibility is handled purely by CSS
+  // (.device-stage.mobile ...), so we never set inline display on the mega panel.
 }
 
 switchVariant('A');
